@@ -32,6 +32,6 @@ for answer in answers:
 #quoraElems = browser.find_elements_by_xpath("//form/div/div/input")
 #emailQuora = quoraElems[0]
 #passwordQuora = quoraElems[1]
-#emailQuora.send_keys("delic665@gmail.com")  # Your email_id
-#passwordQuora.send_keys("gwguru94")  # Your password
+#emailQuora.send_keys("#Email")
+#passwordQuora.send_keys("#Password")
 #passwordQuora.send_keys(Keys.RETURN)
