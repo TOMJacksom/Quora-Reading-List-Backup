@@ -58,20 +58,22 @@ for answer in answers:
             browser.execute_script("window.scrollTo(0, 0);")
             ActionChains(browser).click(answers[0]).perform()
             j += 1
-            # print('j in first is: ' + str(j) + '\n')
+            print('j in first is: ' + str(j) + '\n')
         elif j < len(answers) - 1:
             ActionChains(browser).move_to_element(answers[j]).click(answer).perform()
             j += 1
-            # print('j in normal is: ' + str(j) + '\n')
+            print('j in normal is: ' + str(j) + '\n')
             if j == len(answers) - 1:
+                ActionChains(browser).move_to_element(answers[j]).click(answers[j-1]).perform()
                 continue
     if j == len(answers) - 1:
-        ActionChains(browser).move_to_element(answers[j]).click(answer).click(answers[j]).perform()
-        # print('j in last is: ' + str(j) + '\n')
+        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        ActionChains(browser).click(answers[j]).perform()
+        print('j in last is: ' + str(j) + '\n')
         break
     sleep(2)
 
 # after the scrolling and the clicking is done, the scraping can begin :)
-# html = browser.page_source
-# soup = BeautifulSoup(html)
+html = browser.page_source
+soup = BeautifulSoup(html)
 # print soup.prettify('utf-8')
