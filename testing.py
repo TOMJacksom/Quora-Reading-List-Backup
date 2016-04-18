@@ -15,13 +15,14 @@ from time import sleep
 
 # IF YOU ARE NOT LOGGED IN TO QUORA - UNCOMMENT THE CODE BELLOW (start-end)
 # start
-# browser = webdriver.Chrome()
-# browser.get('https://www.quora.com')
+# browser = webdriver.Chrome(executable_path="C:\Python27\chromedriver.exe")
+# browser.get('https://www.quora.com/reading_list/all')
+# browser.maximize_window()
 # quoraElems = browser.find_elements_by_xpath("//form/div/div/input")
 # emailQuora = quoraElems[0]
 # passwordQuora = quoraElems[1]
-# emailQuora.send_keys("your_email@email.com")  # Your email address
-# passwordQuora.send_keys("yourpassword123")  # Your password
+# emailQuora.send_keys("yourEmail@email.com")  # Your email address
+# passwordQuora.send_keys("yourpassword")  # Your password
 # passwordQuora.send_keys(Keys.RETURN)
 # end
 
@@ -40,6 +41,7 @@ browser = webdriver.Chrome(executable_path="C:\Python27\chromedriver.exe", chrom
 # after that it will start to click "(more)" for each answer
 # sleep(5) means wait 5 seconds before the next scroll down so everything can load
 # if your internet is not as crappy as mine you can change it to less so the scrolling and clicking can take less time
+# if you have many/few answers change the number at while (12) to a bigger/smaller number(I have 160 so 12 is ok for me)
 browser.get('https://www.quora.com/reading_list/all')
 i = 0
 while i < 12:
@@ -58,22 +60,19 @@ for answer in answers:
             browser.execute_script("window.scrollTo(0, 0);")
             ActionChains(browser).click(answers[0]).perform()
             j += 1
-            print('j in first is: ' + str(j) + '\n')
         elif j < len(answers) - 1:
             ActionChains(browser).move_to_element(answers[j]).click(answer).perform()
             j += 1
-            print('j in normal is: ' + str(j) + '\n')
             if j == len(answers) - 1:
                 ActionChains(browser).move_to_element(answers[j]).click(answers[j-1]).perform()
                 continue
     if j == len(answers) - 1:
         browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         ActionChains(browser).click(answers[j]).perform()
-        print('j in last is: ' + str(j) + '\n')
         break
     sleep(2)
 
 # after the scrolling and the clicking is done, the scraping can begin :)
 html = browser.page_source
 soup = BeautifulSoup(html)
-# print soup.prettify('utf-8')
+print soup.prettify('utf-8')
