@@ -5,6 +5,9 @@ from selenium.webdriver.chrome.options import Options
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+from file_io import *
+from html2text import *
+from textwrap import *
 
 # SO FAR THIS WORKS FOR ANSWERS ONLY (I WILL ADD SAVED QUESTIONS IN THE FUTURE)
 # SO FAR THIS WORKS FOR CHROME ONLY, (I WILL ADD MOZILLA IN THE FUTURE)
@@ -44,13 +47,13 @@ browser = webdriver.Chrome(executable_path="C:\Python27\chromedriver.exe", chrom
 # if you have many/few answers change the number at while (12) to a bigger/smaller number(I have 160 so 12 is ok for me)
 browser.get('https://www.quora.com/reading_list/all')
 i = 0
-while i < 12:
+while i < 15:
     browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     sleep(5)
     i += 1
 
+# Identifies answers by the '(more)' element
 answers = browser.find_elements_by_link_text('(more)')
-# helper = browser.find_elements_by_class_name('CredibilityFact')
 
 j = 1
 print('The number of answers: ' + str(len(answers)) + '\n')
@@ -74,5 +77,24 @@ for answer in answers:
 
 # after the scrolling and the clicking is done, the scraping can begin :)
 html = browser.page_source
-soup = BeautifulSoup(html)
-print soup.prettify('utf-8')
+soup = BeautifulSoup(html, 'html.parser')
+
+
+# This section of the code creates the directory and the reading_list text file which has all the content in it
+dir_name = 'Quora Reading List'
+
+create_project_dir(dir_name)
+
+create_data_file(dir_name, '')
+for piece in soup.find_all("div", {"class": "ExpandedQText ExpandedAnswer"}):
+    content = piece.text
+    writing = content.encode('utf-8')
+    # writing1 = wrap(writing, 70)
+    # content.decode("utf-8").replace(u'\u2022', '*').encode('utf-8')
+    append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+    print piece.text + '\n'
+
+
+
+
+
