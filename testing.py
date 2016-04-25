@@ -47,7 +47,7 @@ browser = webdriver.Chrome(executable_path="C:\Python27\chromedriver.exe", chrom
 # if you have many/few answers change the number at while (12) to a bigger/smaller number(I have 160 so 12 is ok for me)
 browser.get('https://www.quora.com/reading_list/all')
 i = 0
-while i < 15:
+while i < 0:
     browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     sleep(5)
     i += 1
@@ -86,13 +86,25 @@ dir_name = 'Quora Reading List'
 create_project_dir(dir_name)
 
 create_data_file(dir_name, '')
-for piece in soup.find_all("div", {"class": "ExpandedQText ExpandedAnswer"}):
-    content = piece.text
-    writing = content.encode('utf-8')
-    # writing1 = wrap(writing, 70)
-    # content.decode("utf-8").replace(u'\u2022', '*').encode('utf-8')
-    append_to_file('Quora Reading List' + '/reading_list.txt', writing)
-    print piece.text + '\n'
+
+for list_item in soup.find_all("div", {"class": "pagedlist_item"}):
+    # Gets the question title
+   # question_title = list_item.find("span", {"class": "question_text"})
+   # title = question_title.text
+    # Iterates through elements and checks each one so it can perform suitable actions
+    answer_content = list_item.find("div", {"class": "feed_item_answer answer_text"})
+    span_qtext = answer_content.find("span", {"class": "rendered_qtext"})
+    for element in span_qtext:
+        if element.name == "p":
+            elem = element.attrs
+            if 'qtext_para' in elem['class']:
+                print 'EUREKA'
+        # ISTO OVO ZA SVAKI TIP (UL, OL, I TAKO DALJE)
+
+
+
+    # writing = content.encode('utf-8')
+    # append_to_file('Quora Reading List' + '/reading_list.txt', writing)
 
 
 
