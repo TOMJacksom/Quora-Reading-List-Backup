@@ -31,7 +31,7 @@ options = webdriver.ChromeOptions()
 # PROVIDE YOUR OWN PATH TO YOUR USER DATA
 options.add_argument('user-data-dir=C:\Users\Stefan\AppData\Local\Google\Chrome\User Data')
 # PROVIDE YOUR OWN PATH TO THE CHROME WEB-DRIVER EXECUTABLE (DOWNLOAD IT IF YOU DON'T HAVE IT)
-browser = webdriver.Chrome(executable_path="C:\Python27\chromedriver.exe", chrome_options=options)
+browser = webdriver.Chrome(executable_path='C:\Python27\chromedriver.exe', chrome_options=options)
 # end
 
 # this part goes to the Quora Reading List page (all answers), and scrolls all the way to the bottom (that will
@@ -39,11 +39,11 @@ browser = webdriver.Chrome(executable_path="C:\Python27\chromedriver.exe", chrom
 # after that it will start to click "(more)" for each answer
 # sleep(5) means wait 5 seconds before the next scroll down so everything can load
 # if your internet is not as crappy as mine you can change it to less so the scrolling and clicking can take less time
-# if you have many/few answers change the number at while (12) to a bigger/smaller number(I have 160 so 12 is ok for me)
+# if you have many/few answers change the number at while(12) to a different number(ATM I have 160 so 12 is ok for me)
 browser.get('https://www.quora.com/reading_list/all')
 i = 0
-while i < 0:
-    browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+while i < 15:
+    browser.execute_script('window.scrollTo(0, document.body.scrollHeight);')
     sleep(5)
     i += 1
 
@@ -55,7 +55,7 @@ print('The number of answers: ' + str(len(answers)) + '\n')
 for answer in answers:
     if j < len(answers):
         if j == 1:
-            browser.execute_script("window.scrollTo(0, 0);")
+            browser.execute_script('window.scrollTo(0, 0);')
             ActionChains(browser).click(answers[0]).perform()
             j += 1
         elif j < len(answers) - 1:
@@ -65,7 +65,7 @@ for answer in answers:
                 ActionChains(browser).move_to_element(answers[j]).click(answers[j-1]).perform()
                 continue
     if j == len(answers) - 1:
-        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        browser.execute_script('window.scrollTo(0, document.body.scrollHeight);')
         ActionChains(browser).click(answers[j]).perform()
         break
     sleep(2)
@@ -115,6 +115,8 @@ for list_item in soup.find_all('div', {'class': 'pagedlist_item'}):
             print element.text + '\n'
         else:
             continue
+    if just_text:
+        print  span_qtext.text + '\n'
     # writing = content.encode('utf-8')
     # append_to_file('Quora Reading List' + '/reading_list.txt', writing)
 
