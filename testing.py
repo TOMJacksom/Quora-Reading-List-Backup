@@ -42,7 +42,7 @@ browser = webdriver.Chrome(executable_path='C:\Python27\chromedriver.exe', chrom
 # if you have many/few answers change the number at while(12) to a different number(ATM I have 160 so 12 is ok for me)
 browser.get('https://www.quora.com/reading_list/all')
 i = 0
-while i < 15:
+while i < 17:
     browser.execute_script('window.scrollTo(0, document.body.scrollHeight);')
     sleep(5)
     i += 1
@@ -58,15 +58,19 @@ for answer in answers:
             browser.execute_script('window.scrollTo(0, 0);')
             ActionChains(browser).click(answers[0]).perform()
             j += 1
+            print j
         elif j < len(answers) - 1:
             ActionChains(browser).move_to_element(answers[j]).click(answer).perform()
             j += 1
+            print j
             if j == len(answers) - 1:
                 ActionChains(browser).move_to_element(answers[j]).click(answers[j-1]).perform()
+                print j
                 continue
     if j == len(answers) - 1:
         browser.execute_script('window.scrollTo(0, document.body.scrollHeight);')
         ActionChains(browser).click(answers[j]).perform()
+        print answers[j].text
         break
     sleep(2)
 
@@ -85,10 +89,17 @@ create_data_file(dir_name, '')
 for list_item in soup.find_all('div', {'class': 'pagedlist_item'}):
     # Gets the question title
     question_title = list_item.find('span', {'class': 'question_text'})
-    title = question_title.text
-    print title + '\n'
+    content = question_title.text
+    writing = content.encode('utf-8')
+    append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+    # FILE WRITE TITLE CODE
+    # print title + '\n'
+
     # Iterates through elements and checks each one so it can perform suitable actions
+    if type(list_item.find('div', {'class': 'ExpandedQText ExpandedAnswer'})) == 'NoneType':
+        continue
     answer_content = list_item.find('div', {'class': 'ExpandedQText ExpandedAnswer'})
+    print type(answer_content)
     span_qtext = answer_content.find('span', {'class': 'rendered_qtext'})
     just_text = True
     for element in span_qtext:
@@ -96,31 +107,44 @@ for list_item in soup.find_all('div', {'class': 'pagedlist_item'}):
             just_text = False
             elem = element.attrs
             if 'qtext_para' in elem['class']:
-                print element.text + '\n'
+                # FILE WRITE PARAGRAPH CODE
+                content = element.text
+                writing = content.encode('utf-8')
+                append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+                # print element.text + '\n'
         elif element.name == 'ol':
             just_text = False
             ol_elements = element.find_all('li')
             counter = 1
             for li in ol_elements:
-                print str(counter) + li.text + '\n'
+                content = str(counter) + ' ' + li.text
+                writing = content.encode('utf-8')
+                append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+                # FILE WRITE LIST ITEM CODE
+                # print str(counter) + li.text + '\n'
                 counter += 1
         elif element.name == 'ul':
             just_text = False
             ul_elements = element.find_all('li')
             for li in ul_elements:
-                print li.text + '\n'
+                content = li.text
+                writing = content.encode('utf-8')
+                append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+                # FILE WRITE LIST ITEM CODE
+                # print li.text + '\n'
         elif element.name == 'br':
-            print '<br>' + '\n'
+            append_to_file('Quora Reading List' + '/reading_list.txt', '')
+            # FILE WRITE BLANK ROW CODE (BREAK BETWEEN PARAGRAPHS)
+            # print '<br>' + '\n'
         elif element.name == 'None':
-            print element.text + '\n'
+            content = element.text
+            writing = content.encode('utf-8')
+            append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+            # FILE WRITE WHATEVER CODE
+            # print element.text + '\n'
         else:
             continue
-    if just_text:
-        print  span_qtext.text + '\n'
-    # writing = content.encode('utf-8')
-    # append_to_file('Quora Reading List' + '/reading_list.txt', writing)
-
-
-
-
+    # if just_text:
+        # FILE WRITE PLAIN TEXT CODE
+        # print span_qtext.text + '\n'
 
