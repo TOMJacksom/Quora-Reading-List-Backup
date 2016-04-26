@@ -82,14 +82,14 @@ create_project_dir(dir_name)
 
 create_data_file(dir_name, '')
 
-for list_item in soup.find_all("div", {"class": "pagedlist_item"}):
+for list_item in soup.find_all('div', {'class': 'pagedlist_item'}):
     # Gets the question title
-    question_title = list_item.find("span", {"class": "question_text"})
+    question_title = list_item.find('span', {'class': 'question_text'})
     title = question_title.text
     print title + '\n'
     # Iterates through elements and checks each one so it can perform suitable actions
-    answer_content = list_item.find("div", {"class": "ExpandedQText ExpandedAnswer"}) # "class": "feed_item_answer answer_text"
-    span_qtext = answer_content.find("span", {"class": "rendered_qtext"})
+    answer_content = list_item.find('div', {'class': 'ExpandedQText ExpandedAnswer'})
+    span_qtext = answer_content.find('span', {'class': 'rendered_qtext'})
     just_text = True
     for element in span_qtext:
         if element.name == 'p':
@@ -99,20 +99,22 @@ for list_item in soup.find_all("div", {"class": "pagedlist_item"}):
                 print element.text + '\n'
         elif element.name == 'ol':
             just_text = False
-            ol_elements = element.find_all("li")
+            ol_elements = element.find_all('li')
             counter = 1
             for li in ol_elements:
                 print str(counter) + li.text + '\n'
                 counter += 1
         elif element.name == 'ul':
             just_text = False
-            ul_elements = element.find_all("li")
+            ul_elements = element.find_all('li')
             for li in ul_elements:
                 print li.text + '\n'
         elif element.name == 'br':
             print '<br>' + '\n'
         elif element.name == 'None':
             print element.text + '\n'
+        else:
+            continue
     # writing = content.encode('utf-8')
     # append_to_file('Quora Reading List' + '/reading_list.txt', writing)
 
