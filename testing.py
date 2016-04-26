@@ -1,13 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver import ActionChains
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
-import requests
 from bs4 import BeautifulSoup
 from time import sleep
 from file_io import *
-from html2text import *
-from textwrap import *
 
 # SO FAR THIS WORKS FOR ANSWERS ONLY (I WILL ADD SAVED QUESTIONS IN THE FUTURE)
 # SO FAR THIS WORKS FOR CHROME ONLY, (I WILL ADD MOZILLA IN THE FUTURE)
@@ -89,20 +84,35 @@ create_data_file(dir_name, '')
 
 for list_item in soup.find_all("div", {"class": "pagedlist_item"}):
     # Gets the question title
-   # question_title = list_item.find("span", {"class": "question_text"})
-   # title = question_title.text
+    question_title = list_item.find("span", {"class": "question_text"})
+    title = question_title.text
+    print title + '\n'
     # Iterates through elements and checks each one so it can perform suitable actions
-    answer_content = list_item.find("div", {"class": "feed_item_answer answer_text"})
+    answer_content = list_item.find("div", {"class": "ExpandedQText ExpandedAnswer"}) # "class": "feed_item_answer answer_text"
     span_qtext = answer_content.find("span", {"class": "rendered_qtext"})
+    just_text = True
     for element in span_qtext:
-        if element.name == "p":
+        if element.name == 'p':
+            just_text = False
             elem = element.attrs
             if 'qtext_para' in elem['class']:
-                print 'EUREKA'
-        # ISTO OVO ZA SVAKI TIP (UL, OL, I TAKO DALJE)
-
-
-
+                print element.text + '\n'
+        elif element.name == 'ol':
+            just_text = False
+            ol_elements = element.find_all("li")
+            counter = 1
+            for li in ol_elements:
+                print str(counter) + li.text + '\n'
+                counter += 1
+        elif element.name == 'ul':
+            just_text = False
+            ul_elements = element.find_all("li")
+            for li in ul_elements:
+                print li.text + '\n'
+        elif element.name == 'br':
+            print '<br>' + '\n'
+        elif element.name == 'None':
+            print element.text + '\n'
     # writing = content.encode('utf-8')
     # append_to_file('Quora Reading List' + '/reading_list.txt', writing)
 
