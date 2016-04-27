@@ -92,55 +92,60 @@ for list_item in soup.find_all('div', {'class': 'pagedlist_item'}):
     # Iterates through elements and checks each one so it can perform suitable actions
     answer_content = list_item.find('div', {'class': 'ExpandedQText ExpandedAnswer'})
     if answer_content is None:
-        print type(answer_content)
         print count
         count += 1
         answer_content = list_item.find('span', {'class': 'inline_editor_value'})
+        span_qtext_all = answer_content.find_all('span', {'class': 'rendered_qtext'})
         if answer_content is None:
             continue
     else:
         print count
         count += 1
-        span_qtext = answer_content.find('span', {'class': 'rendered_qtext'})
-    for element in span_qtext:
-        if element.name == 'p':
-            elem = element.attrs
-            if 'qtext_para' in elem['class']:
-                content = element.text
-                writing = content.encode('utf-8')
-                append_to_file('Quora Reading List' + '/reading_list.txt', writing)
-        elif element.name == 'ol':
-            ol_elements = element.find_all('li')
-            counter = 1
-            for li in ol_elements:
-                content = str(counter) + ' ' + li.text
-                writing = content.encode('utf-8')
-                append_to_file('Quora Reading List' + '/reading_list.txt', writing)
-                counter += 1
-        elif element.name == 'pre':
-            sub_element = element.find('ol', {'class': 'linenums'})
-            if sub_element.name == 'ol':
-                ol_elements = sub_element.find_all('li')
+        span_qtext_all = answer_content.find_all('span', {'class': 'rendered_qtext'})
+
+    for span_qtext in span_qtext_all:
+        for element in span_qtext:
+            if element.name == 'p':
+                elem = element.attrs
+                if 'qtext_para' in elem['class']:
+                    content = element.text
+                    writing = content.encode('utf-8')
+                    append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+            elif element.name == 'ol':
+                ol_elements = element.find_all('li')
                 counter = 1
                 for li in ol_elements:
                     content = str(counter) + ' ' + li.text
                     writing = content.encode('utf-8')
                     append_to_file('Quora Reading List' + '/reading_list.txt', writing)
                     counter += 1
-        elif element.name == 'ul':
-            ul_elements = element.find_all('li')
-            for li in ul_elements:
-                content = li.text
+            elif element.name == 'pre':
+                sub_element = element.find('ol', {'class': 'linenums'})
+                if sub_element.name == 'ol':
+                    ol_elements = sub_element.find_all('li')
+                    counter = 1
+                    for li in ol_elements:
+                        content = str(counter) + ' ' + li.text
+                        writing = content.encode('utf-8')
+                        append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+                        counter += 1
+            elif element.name == 'ul':
+                ul_elements = element.find_all('li')
+                for li in ul_elements:
+                    content = li.text
+                    writing = content.encode('utf-8')
+                    append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+            elif element.name == 'div':
+                elem = element.attrs
+                if 'qtext_image_wrapper' in elem['class']:
+                    writing = 'img source'
+                    append_to_file('Quora Reading List' + '/reading_list.txt', writing)
+            elif element.name == 'br':
+                continue
+            elif type(element) == 'NoneType':
+                content = str(element)
+                print content
                 writing = content.encode('utf-8')
                 append_to_file('Quora Reading List' + '/reading_list.txt', writing)
-        elif element.name == 'div':
-            elem = element.attrs
-            if 'qtext_image_wrapper' in elem['class']:
-                writing = 'img source'
-                append_to_file('Quora Reading List' + '/reading_list.txt', writing)
-        else:
-            content = span_qtext.text
-            writing = content.encode('utf-8')
-            append_to_file('Quora Reading List' + '/reading_list.txt', writing)
-            break
+                break
 
